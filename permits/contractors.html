@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<title>Άδεια Εκτέλεσης Εργασιών Εργολάβου- RIVER WEST</title>
+
+<!-- FLATPICKR CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
+
+<!-- FLATPICKR JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/gr.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+    }
+    .page {
+        width: 800px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 20px 30px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+    h1 {
+        text-align: center;
+        font-size: 20px;
+        text-transform: uppercase;
+    }
+    .section-title {
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        text-decoration: underline;
+    }
+    .field-group { margin-bottom: 10px; }
+    .field-group label {
+        display: inline-block;
+        min-width: 180px;
+        font-weight: bold;
+    }
+    .field-group input[type="text"],
+    .field-group input[type="tel"],
+    .field-group textarea,
+    .field-group select {
+        width: 60%;
+        padding: 4px;
+        box-sizing: border-box;
+    }
+    textarea { height: 60px; resize: vertical; }
+    .checkbox-group { margin: 10px 0; }
+    .hidden { display: none; }
+    .submit-row { text-align: center; margin-top: 20px; }
+    button { padding: 8px 20px; font-size: 14px; cursor: pointer; }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // === EMAIL SETTINGS (UPDATED) ===
+    const PERMITS_EMAIL = "permits@riverwest.gr";
+    const CC_EMAILS = "gkarampampas@riverwest.gr,rwcontrolroom@gmail.com,kostasd@shield.com.gr,Maintenance@riverwest.gr";
+
+    // ---------------- DOM ELEMENTS ----------------
+    const permitForm      = document.getElementById("permitForm");
+
+    const companyName     = document.getElementById("companyName");
+    const repName         = document.getElementById("repName");
+    const repMobile       = document.getElementById("repMobile");
+    const respName        = document.getElementById("respName");
+    const respMobile      = document.getElementById("respMobile");
+    const workers         = document.getElementById("workers");
+    const vehicles        = document.getElementById("vehicles");
+    const workType        = document.getElementById("workType");
+    const workDescription = document.getElementById("workDescription");
+    const areaSelect      = document.getElementById("area");
+    const areaOtherBox    = document.getElementById("areaOtherBox");
+    const areaOther       = document.getElementById("areaOther");
+    const shop            = document.getElementById("shop");
+
+    const startDateInput  = document.getElementById("startDate");
+    const endDateInput    = document.getElementById("endDate");
+    const startTimeSelect = document.getElementById("startTime");
+    const endTimeSelect   = document.getElementById("endTime");
+
+    const noiseBox        = document.getElementById("noise-box");
+    const noiseConfirm    = document.getElementById("noiseConfirm");
+
+    // ---------------- TIME DROPDOWNS ----------------
+    function populateTimes(selectEl) {
+        for (let h = 0; h < 24; h++) {
+            for (let m = 0; m < 60; m += 15) {
+                const hh = String(h).padStart(2, "0");
+                const mm = String(m).padStart(2, "0");
+                const v = `${hh}:${mm}`;
+                const opt = document.createElement("option");
+                opt.value = v;
+                opt.textContent = v;
+                selectEl.appendChild(opt);
+            }
+        }
+    }
+    populateTimes(startTimeSelect);
+    populateTimes(endTimeSelect);
+
+    // ---------------- FLATPICKR DATE PICKERS ----------------
+    if (window.flatpickr) {
+        flatpickr("#startDate", {
+            dateFormat: "d/m/Y",
+            locale: "gr"
+        });
+
+        flatpickr("#endDate", {
+            dateFormat: "d/m/Y",
+            locale: "gr"
+        });
+    }
+
+    // -------------- NOISE DETECTION 09:00–21:00 --------------
+    function minutesSinceMidnight(t) {
+        const [h, m] = t.split(":").map(Number);
+        return h * 60 + m;
+    }
+
+    function intervalsOverlap(a1, a2, b1, b2) {
+        return a1 < b2 && b1 < a2;
+    }
+
+    function updateNoiseBox() {
+        const st = startTimeSelect.value;
+        const et = endTimeSelect.value;
+
+        if (!st || !et) return;
+
+        const w1 = minutesSinceMidnight(st);
+        const w2 = minutesSinceMidnight(et);
+        const q1 = 9 * 60;   // 09:00
+        const q2 = 21 * 60;  // 21:00
+
+        if (intervalsOverlap(w1, w2, q1, q2)) {
+            noiseBox.classList.remove("hidden");
+            noiseConfirm.required = true;
+        } else {
+            noiseBox.classList.add("hidden");
+            noiseConfirm.required = false;
+        }
+    }
+
+    startTimeSelect.addEventListener("change", updateNoiseBox);
+    endTimeSelect.addEventListener("change", updateNoiseBox);
+
+    // ---- AREA dropdown: show extra input only if "Άλλος" ----
+    areaSelect.addEventListener("change", () => {
+        if (areaSelect.value === "Άλλος") {
+            areaOtherBox.classList.remove("hidden");
+            areaOther.required = true;
+        } else {
+            areaOtherBox.classList.add("hidden");
+            areaOther.required = false;
+            areaOther.value = "";
+        }
+    });
+
+    // ---------------- HELPERS ----------------
+    function parseDateTime(dateStr, timeStr) {
+        const [dd, mm, yyyy] = dateStr.split("/");
+        const [HH, MM] = timeStr.split(":");
+        return new Date(
+            Number(yyyy),
+            Number(mm) - 1,
+            Number(dd),
+            Number(HH),
+            Number(MM)
+        );
+    }
+
+    // ---------------- FORM SUBMIT ----------------
+    permitForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // HTML5 validation για required κλπ
+        if (!permitForm.checkValidity()) {
+            permitForm.reportValidity();
+            return;
+        }
+
+        const sdStr = startDateInput.value.trim();
+        const edStr = endDateInput.value.trim();
+        const stStr = startTimeSelect.value;
+        const etStr = endTimeSelect.value;
+
+        if (!sdStr || !edStr || !stStr || !etStr) {
+            alert("Παρακαλώ συμπληρώστε σωστά ημερομηνίες και ώρες.");
+            return;
+        }
+
+        const startDT = parseDateTime(sdStr, stStr);
+        const endDT   = parseDateTime(edStr, etStr);
+
+        if (isNaN(startDT.getTime()) || isNaN(endDT.getTime())) {
+            alert("Μη έγκυρη ημερομηνία ή ώρα.");
+            return;
+        }
+
+        // Έλεγχος: η λήξη (ημερομηνία/ώρα) να είναι ΜΕΤΑ την έναρξη
+        if (endDT <= startDT) {
+            alert("Η λήξη (ημερομηνία και ώρα) πρέπει να είναι μετά την έναρξη.");
+            return;
+        }
+
+        // Έλεγχος μέγιστης διάρκειας 7 ημερών
+        const maxDT = new Date(startDT);
+        maxDT.setDate(maxDT.getDate() + 7);
+        if (endDT > maxDT) {
+            alert("Η διάρκεια μπορεί να είναι έως 7 ημέρες.");
+            return;
+        }
+
+        // Mobile validation
+        const repMob  = repMobile.value.trim().replace(/\D/g, "");
+        const respMob = respMobile.value.trim().replace(/\D/g, "");
+
+        if (repMob.length !== 10) {
+            alert("Το κινητό εκπροσώπου πρέπει να έχει 10 ψηφία.");
+            return;
+        }
+        if (respMob.length !== 10) {
+            alert("Το κινητό υπευθύνου πρέπει να έχει 10 ψηφία.");
+            return;
+        }
+
+        // Value για Χώρο (με "Άλλος")
+        const areaValue = (areaSelect.value === "Άλλος"
+            ? areaOther.value
+            : areaSelect.value);
+
+        // Build email body
+        const lines = [
+            "=== ΑΙΤΗΣΗ ΑΔΕΙΑΣ ΕΚΤΕΛΕΣΗΣ ΕΡΓΑΣΙΩΝ ΕΡΓΟΛΑΒΟΥ RIVER WEST ===",
+            "",
+            "Επωνυμία Εταιρείας: " + companyName.value,
+            "Εκπρόσωπος: " + repName.value,
+            "Κινητό Εκπροσώπου: " + repMobile.value,
+            "Υπεύθυνος στο χώρο: " + respName.value,
+            "Κινητό Υπευθύνου: " + respMobile.value,
+            "Εργαζόμενοι: " + workers.value,
+            "Οχήματα: " + vehicles.value,
+            "Είδος Εργασιών: " + workType.value,
+            "Περιγραφή Εργασιών: " + workDescription.value,
+            "Χώρος: " + areaValue,
+            "Κατάστημα: " + (shop.value || ""),
+            "Ημ/νία Έναρξης: " + sdStr,
+            "Ώρα Έναρξης: " + stStr,
+            "Ημ/νία Λήξης: " + edStr,
+            "Ώρα Λήξης: " + etStr
+        ];
+
+        const subject =
+            "Αίτηση Άδειας Εργασιών Εργολάβου " +
+            companyName.value +
+            " - " +
+            (shop.value || "Χωρίς Κατάστημα");
+
+        const mailto =
+            "mailto:" + encodeURIComponent(PERMITS_EMAIL) +
+            "?cc=" + encodeURIComponent(CC_EMAILS) +
+            "&subject=" + encodeURIComponent(subject) +
+            "&body=" + encodeURIComponent(lines.join("\n"));
+
+        alert("Θα ανοίξει τώρα το email σας με την αίτηση έτοιμη.");
+        window.location.href = mailto;
+    });
+});
+</script>
+</head>
+
+<body>
+<div class="page">
+
+<h1>ΑΔΕΙΑ ΕΚΤΕΛΕΣΗΣ ΕΡΓΑΣΙΩΝ ΕΡΓΟΛΑΒΟΥ <br>ΕΜΠΟΡΙΚΟ ΚΕΝΤΡΟ RIVER WEST</h1>
+
+<form id="permitForm">
+
+    <div class="section-title">ΣΤΟΙΧΕΙΑ ΕΡΓΟΛΑΒΟΥ</div>
+
+    <div class="field-group">
+        <label>Επωνυμία Εταιρείας:</label>
+        <input type="text" id="companyName" required>
+    </div>
+
+    <div class="field-group">
+        <label>Εκπρόσωπος:</label>
+        <input type="text" id="repName" required>
+    </div>
+
+    <div class="field-group">
+        <label>Κινητό Εκπροσώπου:</label>
+        <input type="tel" id="repMobile" required placeholder="10 ψηφία">
+    </div>
+
+    <div class="field-group">
+        <label>Υπεύθυνος στο χώρο:</label>
+        <input type="text" id="respName" required>
+    </div>
+
+    <div class="field-group">
+        <label>Κινητό Υπευθύνου:</label>
+        <input type="tel" id="respMobile" required placeholder="10 ψηφία">
+    </div>
+
+    <div class="field-group">
+        <label>Ονόματα Εργαζομένων:</label>
+        <textarea id="workers" required></textarea>
+    </div>
+
+    <div class="field-group">
+        <label>Οχήματα (προαιρετικό):</label>
+        <textarea id="vehicles"></textarea>
+    </div>
+
+    <div class="section-title">ΣΤΟΙΧΕΙΑ ΕΡΓΑΣΙΩΝ</div>
+
+    <div class="field-group">
+        <label>Είδος Εργασιών:</label>
+        <input type="text" id="workType" required>
+    </div>
+
+    <div class="field-group">
+        <label>Περιγραφή Εργασιών:</label>
+        <textarea id="workDescription" required></textarea>
+    </div>
+
+    <div class="field-group">
+        <label>Χώρος:</label>
+        <select id="area" required>
+            <option value="">-- Επιλέξτε Χώρο --</option>
+            <option value="Εσωτερικός Καταστήματος">Εσωτερικός Καταστήματος</option>
+            <option value="Εξωτερικός Καταστήματος">Εξωτερικός Καταστήματος</option>
+            <option value="Κοινόχρηστος Χώρος">Κοινόχρηστος Χώρος</option>
+            <option value="Άλλος">Άλλος</option>
+        </select>
+    </div>
+
+    <div class="field-group hidden" id="areaOtherBox">
+        <label>Προσδιορίστε:</label>
+        <input type="text" id="areaOther">
+    </div>
+
+    <div class="field-group">
+        <label>Κατάστημα:</label>
+        <select id="shop" required>
+            <option value="">-- Επιλέξτε Κατάστημα --</option>
+            <option>TEZENIS</option>
+            <option>MAT FASHION</option>
+            <option>CELESTINO</option>
+            <option>GALERIE DE BEAUTE</option>
+            <option>HARALAS</option>
+            <option>BRAND SELECTION</option>
+            <option>TSAKIRIS MALLAS</option>
+            <option>KIKO MILANO</option>
+            <option>CALZEDONIA</option>
+            <option>KOKKORIS OPTICS</option>
+            <option>TSOYDEROS</option>
+            <option>PANDORA</option>
+            <option>MANGO</option>
+            <option>ZARA</option>
+            <option>ΠΕΤΑΛΟΥΔΑ</option>
+            <option>NINNOLO</option>
+            <option>THE MAGIC BOX</option>
+            <option>LC WAIKIKI</option>
+            <option>ΙΔΙΟΚΤΗΤΗΣ</option>
+            <option>LIFE IS FOR FUN </option>
+            <option>NAKAS</option>
+            <option>PANAIDIS</option>
+            <option>COFFEEWAY</option>
+            <option>PARABITA</option>
+            <option>DPAM</option>
+            <option>BSB</option>
+            <option>STRADIVARIUS</option>
+            <option>OYSHO</option>
+            <option>LYNNE</option>
+            <option>ΦΑΡΜΑΚΕΙΟ</option>
+            <option>TOI &amp; MOI</option>
+            <option>MAN &amp; MANETTI</option>
+            <option>NAVY &amp; GREEN</option>
+            <option>GUESS</option>
+            <option>BERSHKA</option>
+            <option>PULL &amp; BEAR</option>
+            <option>MAYORAL</option>
+            <option>CALVIN KLEIN</option>
+            <option>BENETTON</option>
+            <option>PINK WOMAN</option>
+            <option>ADIDAS</option>
+            <option>NESPRESSO</option>
+            <option>CROCKS</option>
+            <option>Bodytalk</option>
+            <option>ALE</option>
+            <option>FUNKY BUDDHA</option>
+            <option>ALTER SHOPS</option>
+            <option>H&amp;M</option>
+            <option>INTERSPORT </option>
+            <option>H&amp;M</option>
+            <option>JD</option>
+            <option>ATTRATTIVO</option>
+            <option>COLUMBIA</option>
+            <option>SCHOOL</option>
+            <option>FLOCAFE</option>
+            <option>LOYKOUMADES</option>
+            <option>KFC</option>
+            <option>STARBUCKS</option>
+            <option>MI STORE</option>
+            <option>LEGO</option>
+            <option>APOLA</option>
+            <option>IKEA</option>
+            <option>ΜΟΥΣΤΑΚΑΣ</option>
+            <option>JYSK</option>
+            <option>REGUS</option>
+            <option>ALTERLIFE</option>
+            <option>SEPHORA</option>
+            <option>PRENATAL</option>
+            <option>G52</option>
+            <option>I-storm</option>
+            <option>NIKE</option>
+            <option>DECATHLON</option>
+            <option>ΚΩΤΣΟΒΟΛΟΣ</option>
+        </select>
+    </div>
+
+    <div class="section-title">ΗΜΕΡΟΜΗΝΙΕΣ &amp; ΩΡΕΣ</div>
+
+    <div class="field-group">
+        <label>Ημ/νία Έναρξης:</label>
+        <input type="text" id="startDate" required>
+    </div>
+
+    <div class="field-group">
+        <label>Ώρα Έναρξης:</label>
+        <select id="startTime" required></select>
+    </div>
+
+    <div class="field-group">
+        <label>Ημ/νία Λήξης:</label>
+        <input type="text" id="endDate" required>
+    </div>
+
+    <div class="field-group">
+        <label>Ώρα Λήξης:</label>
+        <select id="endTime" required></select>
+    </div>
+
+    <!-- NOISE BOX -->
+    <div id="noise-box" class="checkbox-group hidden">
+        <input type="checkbox" id="noiseConfirm">
+        <label for="noiseConfirm">
+            <strong>
+                ΔΕΣΜΕΥΟΜΑΙ ΟΤΙ ΟΙ ΕΡΓΑΣΙΕΣ ΔΕΝ ΘΑ ΠΡΟΚΑΛΕΣΟΥΝ ΟΧΛΗΣΗ ΚΑΤΑ ΤΗ ΔΙΑΡΚΕΙΑ
+                ΛΕΙΤΟΥΡΓΙΑΣ ΤΟΥ ΕΜΠΟΡΙΚΟΥ (09:00–21:00).
+            </strong>
+        </label>
+    </div>
+
+    <!-- ORIGINAL CHECKBOXES -->
+    <div class="checkbox-group">
+        <input type="checkbox" id="c1" required>
+        <label for="c1">Αναλαμβάνω πλήρως την ευθύνη για το προσωπικό που θα εκτελέσει τις εργασίες.</label>
+    </div>
+
+    <div class="checkbox-group">
+        <input type="checkbox" id="c2" required>
+        <label for="c2">Όλο το προσωπικό διαθέτει νομιμοποιητικά έγγραφα και είναι ασφαλισμένο.</label>
+    </div>
+
+    <div class="checkbox-group">
+        <input type="checkbox" id="c3" required>
+        <label for="c3">Γνωρίζω ότι σε περίπτωση ανάγκης οφείλω να επικοινωνήσω με το control: 212 222 1755.</label>
+    </div>
+
+    <div class="checkbox-group">
+        <input type="checkbox" id="c4" required>
+        <label for="c4"><strong>Δηλώνω ότι τα παραπάνω στοιχεία είναι αληθή και αποδέχομαι τους όρους.</strong></label>
+    </div>
+
+    <div class="submit-row">
+        <button type="submit">Υποβολή Άδειας</button>
+    </div>
+
+</form>
+</div>
+</body>
+</html>
