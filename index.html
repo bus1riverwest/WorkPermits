@@ -6,72 +6,190 @@
 <title>RIVER WEST | Άδειες Εργασίας</title>
 
 <style>
-  body{font-family:Arial,sans-serif;margin:0;padding:30px;background:#f4f6f9;}
-  .container{max-width:780px;margin:auto;background:#fff;padding:35px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
-  h1{text-align:center;margin:0 0 22px;color:#1a1a1a;font-size:22px;}
-  .sub{text-align:center;color:#555;margin:0 0 28px;font-size:13px;line-height:1.4;}
-  .btn{display:block;text-decoration:none;background:#1f6feb;color:#fff;padding:16px;border-radius:14px;margin:0 0 12px;font-weight:700;text-align:center;transition:.2s ease;}
-  .btn:hover{background:#1558b0;transform:translateY(-2px);}
-  .btn-alt{background:#6c757d;}
-  .btn-alt:hover{background:#545b62;}
-  .hr{height:1px;background:#e9ecef;margin:18px 0 22px;}
-  details{background:#f8fafc;border:1px solid #e9ecef;border-radius:14px;padding:14px 16px;}
-  summary{cursor:pointer;font-weight:700;color:#1a1a1a;}
-  .rules{margin:10px 0 0;color:#333;font-size:13px;line-height:1.55;}
-  .rules ul{margin:8px 0 0 18px;padding:0;}
-  .tag{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:999px;padding:4px 10px;font-size:12px;margin:8px 6px 0 0;}
-  .footer{text-align:center;font-size:12px;color:#777;margin-top:24px;}
+body{
+  font-family:Arial,sans-serif;
+  margin:0;
+  padding:30px;
+  background:#f4f6f9;
+}
+
+.container{
+  max-width:780px;
+  margin:auto;
+  background:#fff;
+  padding:35px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+h1{
+  text-align:center;
+  margin:0 0 22px;
+  color:#1a1a1a;
+  font-size:22px;
+}
+
+.sub{
+  text-align:center;
+  color:#555;
+  margin:0 0 28px;
+  font-size:13px;
+  line-height:1.4;
+}
+
+.btn{
+  display:block;
+  text-decoration:none;
+  background:#1f6feb;
+  color:#fff;
+  padding:16px;
+  border-radius:14px;
+  margin:0 0 12px;
+  font-weight:700;
+  text-align:center;
+  transition:.2s ease;
+}
+
+.btn:hover{
+  background:#1558b0;
+  transform:translateY(-2px);
+}
+
+.btn-alt{
+  background:#6c757d;
+}
+
+.btn-alt:hover{
+  background:#545b62;
+}
+
+.hr{
+  height:1px;
+  background:#e9ecef;
+  margin:18px 0 22px;
+}
+
+details{
+  background:#f8fafc;
+  border:1px solid #e9ecef;
+  border-radius:14px;
+  padding:14px 16px;
+}
+
+summary{
+  cursor:pointer;
+  font-weight:700;
+  color:#1a1a1a;
+}
+
+.rules{
+  margin:10px 0 0;
+  color:#333;
+  font-size:13px;
+  line-height:1.55;
+}
+
+.rules ul{
+  margin:8px 0 0 18px;
+  padding:0;
+}
+
+.tag{
+  display:inline-block;
+  background:#eef2ff;
+  color:#3730a3;
+  border-radius:999px;
+  padding:4px 10px;
+  font-size:12px;
+  margin:8px 6px 0 0;
+}
+
+.footer{
+  text-align:center;
+  font-size:12px;
+  color:#777;
+  margin-top:24px;
+}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-  <h1>Επιλογή Άδειας Εργασίας</h1>
-  <p class="sub">
-    Επιλέξτε τη σωστή άδεια. Αν η HTML φόρμα δεν ανοίγει/δεν λειτουργεί σε εταιρικό περιβάλλον,
-    χρησιμοποιήστε την εναλλακτική φόρμα Microsoft (όπου υπάρχει).
-  </p>
+<h1>Επιλογή Άδειας Εργασίας</h1>
 
-  <!-- Contractors (HTML + MS fallback) -->
-  <a class="btn" href="permits/contractors.html">Άδεια Εργασίας Εργολάβου (HTML)</a>
-  <a class="btn btn-alt"
-     href="https://forms.office.com/Pages/ResponsePage.aspx?id=E_wWrNDuqEWkzQkhICB8pEABeR253jdGvfGJd2MoTKRUNjRUUFNTMzdSR1gwUUEwRUFZQTJUQUE4Si4u"
-     target="_blank" rel="noopener">
-     Άδεια Εργασίας Εργολάβου (Microsoft Form – εναλλακτικό)
-  </a>
+<p class="sub">
+Επιλέξτε τη σωστή άδεια. Αν η HTML φόρμα δεν ανοίγει ή δεν λειτουργεί σε εταιρικό περιβάλλον,
+χρησιμοποιήστε την εναλλακτική φόρμα Microsoft.
+</p>
 
-  <div class="hr"></div>
+<!-- CONTRACTOR -->
+<a class="btn" href="permits/contractors.html">
+Άδεια Εργασίας Εργολάβου (HTML)
+</a>
 
-  <!-- Other HTML forms -->
-  <a class="btn" href="permits/marketing.html">Άδεια Εργασίας Marketing</a>
-  <a class="btn" href="permits/maintenance.html">Άδεια Βλάβης / Συντήρησης</a>
-  <a class="btn" href="permits/store.html">Άδεια Εργασίας Καταστήματος</a>
+<a class="btn btn-alt"
+href="https://forms.office.com/Pages/ResponsePage.aspx?id=E_wWrNDuqEWkzQkhICB8pEABeR253jdGvfGJd2MoTKRUNjRUUFNTMzdSR1gwUUEwRUFZQTJUQUE4Si4u"
+target="_blank" rel="noopener">
+Άδεια Εργασίας Εργολάβου (Microsoft Form – εναλλακτικό)
+</a>
 
-  <div class="hr"></div>
+<div class="hr"></div>
 
-  <!-- Contractor instructions -->
-  <details>
-    <summary>Οδηγίες εργολάβων / Βασικοί κανόνες</summary>
-    <div class="rules">
-      <div class="tag">Control Room: 212 222 1755</div>
-      <div class="tag">Permits: permits@riverwest.gr</div>
+<!-- STORE -->
+<a class="btn" href="permits/store.html">
+Άδεια Εργασίας Καταστήματος (HTML)
+</a>
 
-      <ul>
-        <li>Η άδεια πρέπει να έχει εγκριθεί πριν την έναρξη εργασιών.</li>
-        <li>Τήρηση καθαριότητας και ασφαλούς περίφραξης/σήμανσης όπου απαιτείται.</li>
-        <li><b>Θερμές εργασίες</b> (κοπή/συγκόλληση/τροχός) μόνο με ενημέρωση και τα απαιτούμενα μέτρα πυρασφάλειας.</li>
-        <li>Απαγορεύεται η απόθεση μπαζών/απορριμμάτων σε φρεάτια και κοινόχρηστους χώρους.</li>
-        <li>Σε περίπτωση κινδύνου/όχλησης, οι εργασίες διακόπτονται άμεσα κατόπιν εντολής Διοίκησης ή Control Room.</li>
-      </ul>
-      <p style="margin:10px 0 0;color:#666;">
-        *Οι κανόνες είναι συνοπτικοί. Ισχύουν οι οδηγίες/διαδικασίες River West και τα μέτρα ασφάλειας του έργου.
-      </p>
-    </div>
-  </details>
+<a class="btn btn-alt"
+href="https://forms.office.com/Pages/ResponsePage.aspx?id=E_wWrNDuqEWkzQkhICB8pEABeR253jdGvfGJd2MoTKRUMEROUERJUEFCOUxXOEJVUzJMNjlFS0FHQy4u"
+target="_blank" rel="noopener">
+Άδεια Εργασίας Καταστήματος (Microsoft Form – εναλλακτικό)
+</a>
 
-  <div class="footer">RIVER WEST • Work Permits System</div>
+<div class="hr"></div>
+
+<!-- OTHER -->
+<a class="btn" href="permits/marketing.html">
+Άδεια Εργασίας Marketing
+</a>
+
+<a class="btn" href="permits/maintenance.html">
+Άδεια Βλάβης / Συντήρησης
+</a>
+
+<div class="hr"></div>
+
+<!-- RULES -->
+<details>
+<summary>Οδηγίες εργολάβων / Βασικοί κανόνες</summary>
+
+<div class="rules">
+
+<div class="tag">Control Room: 212 222 1755</div>
+<div class="tag">Permits: permits@riverwest.gr</div>
+
+<ul>
+<li>Η άδεια πρέπει να έχει εγκριθεί πριν την έναρξη εργασιών.</li>
+<li>Τήρηση καθαριότητας και ασφαλούς περίφραξης/σήμανσης όπου απαιτείται.</li>
+<li><b>Θερμές εργασίες</b> (κοπή/συγκόλληση/τροχός) μόνο με ενημέρωση και τα απαιτούμενα μέτρα πυρασφάλειας.</li>
+<li>Απαγορεύεται η απόθεση μπαζών ή απορριμμάτων σε φρεάτια και κοινόχρηστους χώρους.</li>
+<li>Σε περίπτωση κινδύνου ή όχλησης οι εργασίες διακόπτονται άμεσα κατόπιν εντολής Διοίκησης ή Control Room.</li>
+</ul>
+
+<p style="margin:10px 0 0;color:#666;">
+*Οι κανόνες είναι συνοπτικοί. Ισχύουν οι διαδικασίες River West και τα μέτρα ασφάλειας του έργου.
+</p>
 
 </div>
+</details>
+
+<div class="footer">
+RIVER WEST • Work Permits System
+</div>
+
+</div>
+
 </body>
 </html>
