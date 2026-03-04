@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ✅ UPDATED: To + CC
     const PERMITS_EMAIL = "permits@riverwest.gr";
-    const CC_EMAILS = "fitout@riverwest.gr,Maintenance@riverwest.gr,kostasd@shield.gr,cremoundos@riverwest.gr";
+    const CC_EMAILS = "fitout@riverwest.gr,Maintenance@riverwest.gr,kostasd@shield.com.gr,cremoundos@riverwest.gr";
 
     // DOM ELEMENTS
     const permitForm      = document.getElementById("permitForm");
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const noiseBox        = document.getElementById("noise-box");
     const noiseConfirm    = document.getElementById("noiseConfirm");
 
-    // TIME OPTIONS
+    // TIME OPTIONS (15')
     function populateTimes(selectEl) {
         for (let h = 0; h < 24; h++) {
             for (let m = 0; m < 60; m += 15) {
@@ -152,13 +152,14 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             noiseBox.classList.add("hidden");
             noiseConfirm.required = false;
+            noiseConfirm.checked = false;
         }
     }
 
     startTimeSelect.addEventListener("change", updateNoiseBox);
     endTimeSelect.addEventListener("change", updateNoiseBox);
 
-    // Είδος Εργασιών: όταν είναι "Άλλη εργασία" → εμφανίζει ελεύθερο κείμενο
+    // Είδος Εργασιών: όταν είναι "Άλλη εργασία" → εμφανίζει ελεύθερο κείμενο (required)
     workTypeSelect.addEventListener("change", () => {
         if (workTypeSelect.value === "Άλλη εργασία") {
             workTypeOtherBox.classList.remove("hidden");
@@ -238,6 +239,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 ? workTypeOther.value
                 : workTypeSelect.value;
 
+        const noiseAccepted = noiseConfirm.checked ? "ΝΑΙ" : "ΟΧΙ";
+
         // Build email body
         const lines = [
             "=== ΑΙΤΗΣΗ ΕΡΓΑΣΙΩΝ ΚΑΤΑΣΤΗΜΑΤΟΣ RIVER WEST ===",
@@ -251,7 +254,8 @@ document.addEventListener("DOMContentLoaded", function () {
             "Ημ/νία Έναρξης: " + sdStr,
             "Ώρα Έναρξης: " + stStr,
             "Ημ/νία Λήξης: " + edStr,
-            "Ώρα Λήξης: " + etStr
+            "Ώρα Λήξης: " + etStr,
+            "Δέσμευση μη όχλησης (09:00–21:00): " + noiseAccepted
         ];
 
         const subject =
@@ -305,8 +309,9 @@ document.addEventListener("DOMContentLoaded", function () {
             <option>THE MAGIC BOX</option>
             <option>LC WAIKIKI</option>
             <option>ΙΔΙΟΚΤΗΤΗΣ</option>
-            <option>LIFE IS FOR FUN </option>
+            <option>LIFE IS FOR FUN</option>
             <option>NAKAS</option>
+            <option>NEW BALANCE</option>
             <option>PANAIDIS</option>
             <option>COFFEEWAY</option>
             <option>PARABITA</option>
@@ -328,14 +333,14 @@ document.addEventListener("DOMContentLoaded", function () {
             <option>PINK WOMAN</option>
             <option>ADIDAS</option>
             <option>NESPRESSO</option>
-            <option>CROCKS</option>
-            <option>Bodytalk</option>
+            <option>CROCS</option>
+            <option>BODYTALK</option>
             <option>ALE</option>
             <option>FUNKY BUDDHA</option>
             <option>ALTER SHOPS</option>
             <option>H&amp;M</option>
-            <option>INTERSPORT </option>
-            <option>JD</option>
+            <option>INTERSPORT</option>
+            <option>JD SPORTS</option>
             <option>ATTRATTIVO</option>
             <option>COLUMBIA</option>
             <option>SCHOOL</option>
@@ -354,7 +359,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <option>SEPHORA</option>
             <option>PRENATAL</option>
             <option>G52</option>
-            <option>I-storm</option>
+            <option>I-STORM</option>
             <option>NIKE</option>
             <option>DECATHLON</option>
             <option>ΚΩΤΣΟΒΟΛΟΣ</option>
@@ -437,15 +442,25 @@ document.addEventListener("DOMContentLoaded", function () {
         </label>
     </div>
 
-    <!-- CHECKBOXES -->
+    <!-- CHECKBOXES (same as Contractor form) -->
     <div class="checkbox-group">
         <input type="checkbox" id="c1" required>
-        <label for="c1" class="req">Αναλαμβάνω πλήρως την ευθύνη για τις εργασίες που θα εκτελεστούν στο κατάστημα.</label>
+        <label for="c1" class="req">Αναλαμβάνω πλήρως την ευθύνη για το προσωπικό που θα εκτελέσει τις εργασίες.</label>
     </div>
 
     <div class="checkbox-group">
         <input type="checkbox" id="c2" required>
-        <label for="c2" class="req">Δηλώνω ότι τα παραπάνω στοιχεία είναι αληθή και αποδέχομαι τους όρους του Εμπορικού Κέντρου.</label>
+        <label for="c2" class="req">Όλο το προσωπικό διαθέτει νομιμοποιητικά έγγραφα και είναι ασφαλισμένο.</label>
+    </div>
+
+    <div class="checkbox-group">
+        <input type="checkbox" id="c3" required>
+        <label for="c3" class="req">Γνωρίζω ότι σε περίπτωση ανάγκης οφείλω να επικοινωνήσω με το control: 212 222 1755.</label>
+    </div>
+
+    <div class="checkbox-group">
+        <input type="checkbox" id="c4" required>
+        <label for="c4" class="req"><strong>Δηλώνω ότι τα παραπάνω στοιχεία είναι αληθή και αποδέχομαι τους όρους.</strong></label>
     </div>
 
     <div class="req-note">Τα πεδία με (*) είναι υποχρεωτικά.</div>
